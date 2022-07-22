@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "739249475158",
+    "project_id": "appproyectocrazytaxi",
+    "storage_bucket": "appproyectocrazytaxi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:739249475158:android:6bb9fd1af405eb759c35f7",
+        "android_client_info": {
+          "package_name": "com.example.app_taxis"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "739249475158-8b0sj30gq6i61kmopvua65bavj6fpq89.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUOunAGY8s3SlWa_CAuvtwZzTr7jWcG0I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "739249475158-8b0sj30gq6i61kmopvua65bavj6fpq89.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
