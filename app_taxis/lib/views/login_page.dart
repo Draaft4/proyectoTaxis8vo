@@ -51,7 +51,7 @@ class LoginPageState extends State<LoginPage> {
         ),
         TextButton(
           onPressed: toogleRegistro,
-          child:const Text("Registrarse"),
+          child: const Text("Registrarse"),
         )
       ],
     );
@@ -60,9 +60,19 @@ class LoginPageState extends State<LoginPage> {
   Widget btnRegistro() {
     return Row(
       children: [
-        TextButton(onPressed: toogleRegistro, child: const Text("Iniciar Sesion",)),
-        const Text("o ",style: TextStyle(color: Colors.white),),
-        const Text("Registrarse", style: TextStyle(color: Colors.amber),)
+        TextButton(
+            onPressed: toogleRegistro,
+            child: const Text(
+              "Iniciar Sesion",
+            )),
+        const Text(
+          "o ",
+          style: TextStyle(color: Colors.white),
+        ),
+        const Text(
+          "Registrarse",
+          style: TextStyle(color: Colors.amber),
+        )
       ],
     );
   }
@@ -115,11 +125,51 @@ class LoginPageState extends State<LoginPage> {
 
   Widget registroWg() {
     return Column(
-      children: [Container()],
+      children: [
+        const TextField(
+            style: TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey, width: 5),
+                ),
+                hintStyle: TextStyle(color: Colors.white),
+                hintText: "Correo electronico",
+                filled: true,
+                fillColor: Color.fromARGB(255, 30, 34, 33)),
+            keyboardType: TextInputType.emailAddress),
+        SizedBox(height: pad),
+        const TextField(
+          style: TextStyle(color: Colors.white),
+          obscureText: true,
+          decoration: InputDecoration(
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey, width: 5),
+              ),
+              hintStyle: TextStyle(color: Colors.white),
+              hintText: "Contraseña",
+              filled: true,
+              fillColor: Color.fromARGB(255, 30, 34, 33)),
+        ),
+        SizedBox(height: pad),
+        ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            primary: Colors.amber,
+            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+          ),
+          child: const Text("Registrarse"),
+        ),
+      ],
     );
   }
 
-  void toogleRegistro(){
+  void toogleRegistro() {
     setState(() {
       registro = !registro;
     });
