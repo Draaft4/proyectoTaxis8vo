@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -21,18 +22,20 @@ class LoginPageState extends State<LoginPage> {
         color: Colors.black,
         child: Padding(
           padding: const EdgeInsets.all(40.0),
-          child: Container(
-            alignment: Alignment.center,
-            child: Column(children: [
-              SizedBox(
-                  width: 150,
-                  height: 150,
-                  child: Image.asset("static/img/gpsTaxi.png")),
-              SizedBox(height: pad / 2),
-              registro ? btnRegistro() : btnInicioSesion(),
-              registro ? registroWg() : loginWg(),
-            ]),
-          ),
+          child: ListView(children: [
+            Container(
+              alignment: Alignment.center,
+              child: Column(children: [
+                SizedBox(
+                    width: 150,
+                    height: 150,
+                    child: Image.asset("static/img/gpsTaxi.png")),
+                SizedBox(height: pad / 2),
+                registro ? btnRegistro() : btnInicioSesion(),
+                registro ? registroWg() : loginWg(),
+              ]),
+            ),
+          ]),
         ),
       ),
     );
@@ -78,11 +81,15 @@ class LoginPageState extends State<LoginPage> {
   }
 
   Widget loginWg() {
+    final controlEmail = TextEditingController();
+    final controlPass = TextEditingController();
+
     return Column(
       children: [
-        const TextField(
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
+        TextField(
+            controller: controlEmail,
+            style: const TextStyle(color: Colors.white),
+            decoration: const InputDecoration(
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey),
                 ),
@@ -95,10 +102,11 @@ class LoginPageState extends State<LoginPage> {
                 fillColor: Color.fromARGB(255, 30, 34, 33)),
             keyboardType: TextInputType.emailAddress),
         SizedBox(height: pad),
-        const TextField(
-          style: TextStyle(color: Colors.white),
+        TextField(
+          controller: controlPass,
+          style: const TextStyle(color: Colors.white),
           obscureText: true,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey),
               ),
@@ -112,7 +120,26 @@ class LoginPageState extends State<LoginPage> {
         ),
         SizedBox(height: pad),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () async {
+            try {
+              final credential = await FirebaseAuth.instance
+                  .signInWithEmailAndPassword(
+                      email: controlEmail.text, password: controlPass.text)
+                  .then((value) =>
+                      {Navigator.pushReplacementNamed(context, "/home")});
+            } on FirebaseAuthException catch (e) {
+              if (e.code == 'user-not-found') {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("Error: El usuario inicado no existe."),
+                ));
+              } else if (e.code == 'wrong-password') {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content:
+                      Text("Error: La contraseña indicada no es correcta."),
+                ));
+              }
+            }
+          },
           style: ElevatedButton.styleFrom(
             primary: Colors.amber,
             padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
@@ -124,11 +151,14 @@ class LoginPageState extends State<LoginPage> {
   }
 
   Widget registroWg() {
+    final controlEmail = TextEditingController();
+    final controlPass = TextEditingController();
     return Column(
       children: [
-        const TextField(
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
+        TextField(
+            controller: controlEmail,
+            style: const TextStyle(color: Colors.white),
+            decoration: const InputDecoration(
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey),
                 ),
@@ -141,10 +171,11 @@ class LoginPageState extends State<LoginPage> {
                 fillColor: Color.fromARGB(255, 30, 34, 33)),
             keyboardType: TextInputType.emailAddress),
         SizedBox(height: pad),
-        const TextField(
-          style: TextStyle(color: Colors.white),
+        TextField(
+          controller: controlPass,
+          style: const TextStyle(color: Colors.white),
           obscureText: true,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey),
               ),
@@ -158,7 +189,31 @@ class LoginPageState extends State<LoginPage> {
         ),
         SizedBox(height: pad),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () async {
+            print("Registrando ${controlEmail.text} ${controlPass.text}");
+            try {
+              final credential = await FirebaseAuth.instance
+                  .createUserWithEmailAndPassword(
+                    email: controlEmail.text,
+                    password: controlPass.text,
+                  )
+                  .then((value) => {print("registrado")});
+            } on FirebaseAuthException catch (e) {
+              if (e.code == 'weak-password') {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text(
+                      "Error: La contraseña debe contener 12 caracteres entre letras y signos."),
+                ));
+              } else if (e.code == 'email-already-in-use') {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("Error: Ya existe una cuenta con ese correo."),
+                ));
+              }
+            } catch (e) {
+              print(e);
+            }
+            toogleRegistro();
+          },
           style: ElevatedButton.styleFrom(
             primary: Colors.amber,
             padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
@@ -171,6 +226,7 @@ class LoginPageState extends State<LoginPage> {
 
   void toogleRegistro() {
     setState(() {
+      print("cambiando de estado");
       registro = !registro;
     });
   }
