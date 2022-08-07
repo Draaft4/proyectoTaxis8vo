@@ -17,10 +17,13 @@ class carreraTaxista extends StatefulWidget {
 class _carreraTaxistaState extends State<carreraTaxista> {
   List<carrera> carrerasActivas = [];
   final usuario usr;
-  final controlPrecio=TextEditingController();
+  List<TextEditingController> listacontrol = [];
   _carreraTaxistaState(this.usr);
   @override
   Widget build(BuildContext context) {
+    for(carrera carr in carrerasActivas){
+      listacontrol.add(TextEditingController());
+    }
     return Scaffold(
       floatingActionButton: FloatingActionButton(child: const Icon(Icons.refresh),onPressed: (){
         actualizarLista();
@@ -39,7 +42,7 @@ class _carreraTaxistaState extends State<carreraTaxista> {
                 Text("Direccion: ${carrerasActivas[index].direccion}"),
                 TextField(
                   keyboardType: TextInputType.number,
-                  controller: controlPrecio,
+                  controller: listacontrol[index],
                   decoration: const InputDecoration(
                     hintText: "Precio a Pagar"
                   ),
@@ -48,8 +51,8 @@ class _carreraTaxistaState extends State<carreraTaxista> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(onPressed: (){
-                      print(controlPrecio.text);
-                      firebase_taxis().tomarCarrera(usr, carrerasActivas[index],double.parse(controlPrecio.text));
+                      print(listacontrol[index].text);
+                      firebase_taxis().tomarCarrera(usr, carrerasActivas[index],double.parse(listacontrol[index].text));
                     }, child: const Text("Aceptar carrera"))
                   ],
                 )
